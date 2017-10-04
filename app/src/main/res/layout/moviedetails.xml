@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <ImageView
         android:id="@+id/movie_img_view"
@@ -30,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Rating -"
+        android:text="@string/user_rating"
         android:textSize="20sp"
         android:textStyle="bold"
         android:id="@+id/movie_rating_heading"
@@ -47,7 +54,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Release Date -"
+        android:text="@string/release_date"
         android:textSize="20sp"
         android:textStyle="bold"
         android:id="@+id/release_date_heading"
@@ -63,4 +70,6 @@
         android:padding="5dp"/>
 
 
+
 </RelativeLayout>
+    </ScrollView>

@@ -1,10 +1,9 @@
 package app.com.example.songoku.popularmovies;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mrecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mrecyclerView.setLayoutManager(new GridLayoutManager(this,2));
@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
         mAdapter.setMovieList(movies);
+
         getPopularMovies();
     }
 
@@ -60,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         moviesApiService.getPopularMovies(new Callback<MovieDetail.MovieResult>() {
             @Override
             public void success(MovieDetail.MovieResult movieResult, Response response) {
+
                 mAdapter.setMovieList(movieResult.getResults());
+
             }
 
             @Override
@@ -82,10 +86,12 @@ public class MainActivity extends AppCompatActivity {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MoviesApiService moviesApiService = restAdapter.create(MoviesApiService.class);
-        moviesApiService.getTopRatedMovies(new Callback<MovieDetail.MovieResult>() {
+        //long id=25;
+        moviesApiService.getTopRatedMovies( new Callback<MovieDetail.MovieResult>() {
             @Override
             public void success(MovieDetail.MovieResult movieResult, Response response) {
                 mAdapter.setMovieList(movieResult.getResults());
+
             }
 
             @Override

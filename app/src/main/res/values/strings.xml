@@ -2,4 +2,6 @@
     <string name="app_name">PopularMOvies</string>
     <string name="user_rating">User Rating</string>
     <string name="release_date">Release Date</string>
+    <string name="trailer_title">Trailer</string>
+    <string name="reviews_title">Reviews</string>
 </resources>

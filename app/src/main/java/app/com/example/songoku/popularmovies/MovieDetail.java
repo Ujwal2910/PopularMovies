@@ -2,9 +2,8 @@ package app.com.example.songoku.popularmovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.view.LayoutInflater;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -16,6 +15,9 @@ import java.util.List;
 public class MovieDetail implements Parcelable {
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
     private String title;
+
+    @Expose
+    long id;
 
     @SerializedName("poster_path")
     private String poster;
@@ -32,9 +34,17 @@ public class MovieDetail implements Parcelable {
 
     public MovieDetail()
     {}
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public MovieDetail(Parcel in)
     {
+        id = in.readLong();
         title = in.readString();
         poster = in.readString();
         overview = in.readString();
@@ -98,6 +108,7 @@ public class MovieDetail implements Parcelable {
 
     public void writeToParcel(Parcel parcel,int i)
     {
+        parcel.writeLong(id);
         parcel.writeString(title);
         parcel.writeString(poster);
         parcel.writeString(overview);

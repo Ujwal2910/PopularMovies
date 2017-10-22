@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         mrecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mrecyclerView.setLayoutManager(new GridLayoutManager(this,2));

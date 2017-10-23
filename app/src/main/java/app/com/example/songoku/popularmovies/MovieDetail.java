@@ -14,23 +14,28 @@ import java.util.List;
 
 public class MovieDetail implements Parcelable {
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
-    private String title;
+
+
+     String title;
 
     @Expose
     long id;
 
+
     @SerializedName("poster_path")
-    private String poster;
+     String poster;
 
 
     @SerializedName("overview")
-    private String overview;
+    String overview;
+
 
     @SerializedName("vote_average")
-    private String user_rating;
+     String user_rating;
+
 
     @SerializedName("release_date")
-    private String release_date;
+     String release_date;
 
     public MovieDetail()
     {}

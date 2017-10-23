@@ -7,6 +7,9 @@
     <item android:title="Order By Rating"
         android:id="@+id/Order_ratings"/>
 
+    <item android:title="Favorites"
+        android:id="@+id/Order_favorites"/>
+
 
 
 </menu>

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,16 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mrecyclerView;
     private MoviesAdapter mAdapter;
-
+    ProgressBar progressBar;
+    public ArrayList<MovieDetail> movies = new ArrayList<MovieDetail>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-
+        progressBar = (ProgressBar)findViewById(R.id.progress_loader);
+        progressBar.setVisibility(View.VISIBLE);
         mrecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mrecyclerView.setLayoutManager(new GridLayoutManager(this,2));
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         mAdapter.setMovieList(movies);
-
+        progressBar.setVisibility(View.INVISIBLE);
         getPopularMovies();
     }
 
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void success(MovieDetail.MovieResult movieResult, Response response) {
 
                 mAdapter.setMovieList(movieResult.getResults());
+
 
             }
 
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void success(MovieDetail.MovieResult movieResult, Response response) {
                 mAdapter.setMovieList(movieResult.getResults());
+               // progressBar.setVisibility(View.INVISIBLE);
 
             }
 
@@ -133,6 +138,17 @@ public class MainActivity extends AppCompatActivity {
         {
             getRatedMovies();
         }
+        if (id == R.id.Order_favorites)
+        {
+            getFavorites();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getFavorites() {
+
+        movies.clear();
+        movies.addAll((new MoviesDB()).getFavouriteMovies(getApplicationContext().getContentResolver()));
+        mAdapter.setMovieList(movies);
     }
 }

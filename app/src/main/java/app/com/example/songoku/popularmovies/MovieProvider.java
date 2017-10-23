@@ -21,20 +21,23 @@ public class MovieProvider extends ContentProvider{
     private static final int MOVIE_LIST = 1;
     static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    private final String TAG = MovieProvider.class.getSimpleName();
+
     static {
         sUriMatcher.addURI(MoviesContract.AUTHORITY,"movies",MOVIE_LIST);
         sUriMatcher.addURI(MoviesContract.AUTHORITY,"#",MOVIE_DETAIL);
     }
 
     static String LOG_TAG = "Database";
-    MovieDBHelper dbHelper;
-    SQLiteDatabase sqLiteDatabase;
+    MovieDBHelper dbHelper ;
+    SQLiteDatabase sqLiteDatabase ;
 
 
     @Override
     public boolean onCreate() {
 
         dbHelper = new MovieDBHelper(getContext());
+        sqLiteDatabase = dbHelper.getWritableDatabase();
         return true;
     }
 
@@ -82,6 +85,7 @@ public class MovieProvider extends ContentProvider{
         {
             returnUri = ContentUris.withAppendedId(MoviesContract.CONTENT_URI,id);
             getContext().getContentResolver().notifyChange(returnUri,null);
+            Log.d(TAG,"Insert Uri :"+returnUri.toString());
             return returnUri;
         }
         throw new UnsupportedOperationException("Not yet implemented");

@@ -1,11 +1,15 @@
 package app.com.example.songoku.popularmovies;
 
+import android.content.ContentResolver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +29,8 @@ import retrofit.client.Response;
 public class MovieDescription extends AppCompatActivity {
 
     public static final String EXTRA_MOVIE = "movie";
+
+    public FloatingActionButton fab;
 
     private MovieDetail mmovieDetail;
     long movieId;
@@ -59,6 +65,8 @@ public class MovieDescription extends AppCompatActivity {
             throw new IllegalArgumentException("Detail activity must receive a movie parcelable");
         }
 
+
+
         mreviewAdapter = new ReviewAdapter(this);
         mvideosAdapter = new VideoAdapter(this);
 
@@ -66,8 +74,11 @@ public class MovieDescription extends AppCompatActivity {
         movie_title = (TextView) findViewById(R.id.movie_title);
         movie_desc = (TextView) findViewById(R.id.movie_desc);
         movie_rating = (TextView) findViewById(R.id.movie_rating);
-
         release_date = (TextView) findViewById(R.id.release_date);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new FabOnClick());
+
+
 
         movieId = mmovieDetail.getId();
         movie_title.setText(mmovieDetail.getTitle());
@@ -91,7 +102,22 @@ public class MovieDescription extends AppCompatActivity {
 
         loadMovieReviews(movieId);
         loadMovieVideos(movieId);
+        updateUI();
 
+
+    }
+
+    private void updateUI() {
+
+        MoviesDB moviesDB = new MoviesDB();
+        boolean favstats = moviesDB.isMovieFavorited(getApplicationContext().getContentResolver(),mmovieDetail.id);
+        if (favstats)
+        {
+            fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_on));
+        }
+        else {
+            fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_off));
+        }
 
     }
 
@@ -153,4 +179,24 @@ public class MovieDescription extends AppCompatActivity {
     }
 
 
+    private class FabOnClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ContentResolver contentResolver= getApplicationContext().getContentResolver();
+            MoviesDB mdb = new MoviesDB();
+            String message;
+            if (mdb.isMovieFavorited(contentResolver,mmovieDetail.id))
+            {
+                message = "Remove from Favorites";
+                mdb.removeMovie(contentResolver,mmovieDetail.id);
+                fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_off));
+            }
+            else {
+                mdb.addMovie(contentResolver,mmovieDetail);
+                message = "Added to Favorites";
+                fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_on));
+            }
+
+        }
+    }
 }

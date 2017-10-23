@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 
 public class MoviesContract {
 
-    public static final String AUTHORITY = "com.example.songoku.popularmovies";
+    public static final String AUTHORITY = "com.example.popularmovies.provider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
 

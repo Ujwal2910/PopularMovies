@@ -12,6 +12,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -187,7 +188,7 @@ public class MovieDescription extends AppCompatActivity {
             String message;
             if (mdb.isMovieFavorited(contentResolver,mmovieDetail.id))
             {
-                message = "Remove from Favorites";
+                message = "Removed from Favorites";
                 mdb.removeMovie(contentResolver,mmovieDetail.id);
                 fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_off));
             }
@@ -196,6 +197,7 @@ public class MovieDescription extends AppCompatActivity {
                 message = "Added to Favorites";
                 fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),android.R.drawable.btn_star_big_on));
             }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
         }
     }

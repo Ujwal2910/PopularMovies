@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         holder.mVideoName.setText(movieVideo.getName());
         holder.mVideoName.setTextSize(20);
-        holder.mvideoImage.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+       // holder.mvideoImage.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+        Picasso.with(context).load("http://img.youtube.com/vi/" + movieVideo.getKey() + "/default.jpg")
+                .into(holder.mvideoImage);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

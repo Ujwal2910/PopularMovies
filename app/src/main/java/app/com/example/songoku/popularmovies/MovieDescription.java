@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +35,15 @@ public class MovieDescription extends AppCompatActivity {
     public FloatingActionButton fab;
 
     private MovieDetail mmovieDetail;
+
     long movieId;
     ImageView movie_poster;
     TextView movie_title;
     TextView movie_desc;
     TextView movie_rating;
-
+    ScrollView mScrollView;
+    int scrollId = 0, scrollOverheadId = 0;
+    private static String LOG_TAG = "DetailView";
 
     TextView release_date;
 
@@ -47,10 +51,11 @@ public class MovieDescription extends AppCompatActivity {
     RecyclerView movieReviewsRecyclerView;
 
     @Bind(R.id.text_trailer_title)
-            RecyclerView movieVideosRecyclerView;
+    RecyclerView movieVideosRecyclerView;
 
     ReviewAdapter mreviewAdapter;
     VideoAdapter mvideosAdapter;
+
 
 
     @Override
@@ -67,7 +72,7 @@ public class MovieDescription extends AppCompatActivity {
         }
 
 
-
+        mScrollView = (ScrollView)findViewById(R.id.detailScrollView);
         mreviewAdapter = new ReviewAdapter(this);
         mvideosAdapter = new VideoAdapter(this);
 
@@ -106,6 +111,26 @@ public class MovieDescription extends AppCompatActivity {
         updateUI();
 
 
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray("SCROLL_POSITION",
+                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int[] position = savedInstanceState.getIntArray("SCROLL_POSITION");
+        if(position != null)
+            mScrollView.post(new Runnable() {
+                public void run() {
+                    mScrollView.scrollTo(position[0], position[1]);
+                }
+            });
     }
 
     private void updateUI() {

@@ -45,7 +45,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         final MovieVideo movieVideo = mValue.get(position);
 
         holder.mVideoName.setText(movieVideo.getName());
-        holder.mVideoName.setTextSize(20);
+       holder.mVideoName.setTextSize(20);
        // holder.mvideoImage.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
         Picasso.with(context).load("http://img.youtube.com/vi/" + movieVideo.getKey() + "/default.jpg")
                 .into(holder.mvideoImage);
@@ -77,7 +77,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(android.R.id.text1)
+       @Bind(android.R.id.text1)
         TextView mVideoName;
         @Bind(android.R.id.icon)
         ImageView mvideoImage;

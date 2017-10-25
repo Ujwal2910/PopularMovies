@@ -1,6 +1,7 @@
 package app.com.example.songoku.popularmovies;
 
 import android.content.ContentResolver;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -116,9 +118,34 @@ public class MovieDescription extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        scrollId = 0;
+        scrollOverheadId = 0;
         super.onSaveInstanceState(outState);
-        outState.putIntArray("SCROLL_POSITION",
-                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+        Rect scrollbounds = new Rect();
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.detailScrollViewContainer);
+        RecyclerView listContainer;
+
+        for (int i = 0; i < container.getChildCount(); i++) {
+            if (container.getChildAt(i).getId() == R.id.layout_trailers_list ||
+                    container.getChildAt(i).getId() == R.id.layout_reviews_list)
+            {
+                listContainer = (RecyclerView) container.getChildAt(i);
+                for(int j=0 ;j<listContainer.getChildCount();j++)
+                {
+                    if (listContainer.getChildAt(j).getLocalVisibleRect(scrollbounds))
+                    {
+                        scrollId = listContainer.getChildAt(j).getId();
+                        scrollOverheadId = listContainer.getId();
+                        break;
+                    }
+                }
+            }
+            outState.putIntArray("SCROLL_POSITION",
+                    new int[]{mScrollView.getScrollX(), mScrollView.getScrollY()});
+            outState.putInt("SCROLLID",scrollId);
+            outState.putInt("SCROLLOVERHEADID", scrollOverheadId);
+        }
+
     }
 
     @Override
@@ -129,9 +156,12 @@ public class MovieDescription extends AppCompatActivity {
             mScrollView.post(new Runnable() {
                 public void run() {
                     mScrollView.scrollTo(position[0], position[1]);
+
                 }
             });
-    }
+        scrollId = savedInstanceState.getInt("SCROLLID");
+        scrollOverheadId = savedInstanceState.getInt("SCROLLOVERHEADID");
+        }
 
     private void updateUI() {
 

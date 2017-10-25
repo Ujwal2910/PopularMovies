@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mrecyclerView;
     private MoviesAdapter mAdapter;
     ProgressBar progressBar;
+    private int selectedOption = R.id.Order_popular;
     public ArrayList<MovieDetail> movies = new ArrayList<MovieDetail>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,19 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter.setMovieList(movies);
         progressBar.setVisibility(View.INVISIBLE);
-        getPopularMovies();
+       // getPopularMovies();
+        if (savedInstanceState == null) {
+            getPopularMovies();
+        } else {
+            loadAdapterPerOptionSelected(
+                    savedInstanceState.getInt("optionSelected", R.id.Order_popular));
+        }
+
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("optionSelected", selectedOption);
     }
 
     private void getPopularMovies() {
@@ -128,21 +141,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if(id == R.id.Order_popular)
+        loadAdapterPerOptionSelected(item.getItemId());
+      //  int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+    private void loadAdapterPerOptionSelected(int selectedOption) {
+        this.selectedOption = selectedOption;
+        if(selectedOption == R.id.Order_popular)
         {
             getPopularMovies();
         }
-        if(id == R.id.Order_ratings)
+        if(selectedOption == R.id.Order_ratings)
         {
             getRatedMovies();
         }
-        if (id == R.id.Order_favorites)
+        if (selectedOption == R.id.Order_favorites)
         {
             getFavorites();
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void getFavorites() {

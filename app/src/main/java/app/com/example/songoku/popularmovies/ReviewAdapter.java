@@ -1,5 +1,6 @@
 package app.com.example.songoku.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+
+//import butterknife.Bind;
 
 /**
  * Created by songoku on 21/10/17.
@@ -64,10 +67,12 @@ public class ReviewAdapter  extends RecyclerView.Adapter<ReviewAdapter.ViewHolde
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        @Bind(android.R.id.text1)
+        @SuppressLint("ResourceType")
+        @BindView(android.R.id.text1)
         TextView mAuthor;
 
-        @Bind(android.R.id.text2)
+        @SuppressLint("ResourceType")
+        @BindView(android.R.id.text2)
         TextView mContent;
 
         public ViewHolder(View itemView) {

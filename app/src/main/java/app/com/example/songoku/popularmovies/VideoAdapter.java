@@ -1,5 +1,6 @@
 package app.com.example.songoku.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -77,10 +78,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-       @Bind(android.R.id.text1)
+       @SuppressLint("ResourceType")
+       @BindView(value = android.R.id.text1)
         TextView mVideoName;
-        @Bind(android.R.id.icon)
-        ImageView mvideoImage;
+        @SuppressLint("ResourceType")
+        @BindView(android.R.id.icon)
+        ImageView mvideoImage ;
         public ViewHolder(View itemView) {
             super(itemView);
 

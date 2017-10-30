@@ -1,8 +1,8 @@
 package app.com.example.songoku.popularmovies;
 
 import android.content.ContentResolver;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -10,21 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+//import butterknife.Bind;
 
 /**
  * Created by songoku on 4/10/17.
@@ -38,6 +39,11 @@ public class MovieDescription extends AppCompatActivity {
 
     private MovieDetail mmovieDetail;
 
+    int mx, my;
+    int rx = 10, ry = 0;
+
+    Bundle reviewState;
+
     long movieId;
     ImageView movie_poster;
     TextView movie_title;
@@ -49,19 +55,20 @@ public class MovieDescription extends AppCompatActivity {
 
     TextView release_date;
 
-    @Bind(R.id.text_reviews_title)
+    //@Bind(R.id.text_reviews_title)
     RecyclerView movieReviewsRecyclerView;
 
-    @Bind(R.id.text_trailer_title)
+  //  @Bind(R.id.text_trailer_title)
     RecyclerView movieVideosRecyclerView;
 
     ReviewAdapter mreviewAdapter;
     VideoAdapter mvideosAdapter;
 
+    Bundle mBundleRecyclerViewState;
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.moviedetails);
@@ -113,54 +120,57 @@ public class MovieDescription extends AppCompatActivity {
         updateUI();
 
 
+
+
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        reviewState = new Bundle();
+        Parcelable state = movieReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
+        reviewState.putParcelable("key", state);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (reviewState != null) {
+            Parcelable state = reviewState.getParcelable("key");
+            movieReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(state);
+        }
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         scrollId = 0;
         scrollOverheadId = 0;
         super.onSaveInstanceState(outState);
-        Rect scrollbounds = new Rect();
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.detailScrollViewContainer);
-        RecyclerView listContainer;
 
-        for (int i = 0; i < container.getChildCount(); i++) {
-            if (container.getChildAt(i).getId() == R.id.layout_trailers_list ||
-                    container.getChildAt(i).getId() == R.id.layout_reviews_list)
-            {
-                listContainer = (RecyclerView) container.getChildAt(i);
-                for(int j=0 ;j<listContainer.getChildCount();j++)
-                {
-                    if (listContainer.getChildAt(j).getLocalVisibleRect(scrollbounds))
-                    {
-                        scrollId = listContainer.getChildAt(j).getId();
-                        scrollOverheadId = listContainer.getId();
-                        break;
-                    }
-                }
-            }
-            outState.putIntArray("SCROLL_POSITION",
-                    new int[]{mScrollView.getScrollX(), mScrollView.getScrollY()});
-            outState.putInt("SCROLLID",scrollId);
-            outState.putInt("SCROLLOVERHEADID", scrollOverheadId);
-        }
+        scrollOverheadId = movieVideosRecyclerView.getScrollY();
+        outState.putInt("rx", rx);
+        outState.putInt("ry", ry);
 
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        final int[] position = savedInstanceState.getIntArray("SCROLL_POSITION");
-        if(position != null)
-            mScrollView.post(new Runnable() {
-                public void run() {
-                    mScrollView.scrollTo(position[0], position[1]);
+        Log.d("onRestoreInstanceState", "coming");
+        Log.d("Value", String.valueOf(savedInstanceState.get("rx")));
+        Log.d("Value", String.valueOf(savedInstanceState.get("ry")));
+        if (savedInstanceState.getInt("rx") != 0 || savedInstanceState.getInt("ry") != 0 )
+        {
+            Log.d("Restore: ", "Coming");
+            movieVideosRecyclerView.smoothScrollToPosition(scrollId);
+        }
+                if (scrollOverheadId!=0)
+        {
+            movieVideosRecyclerView.setScrollY(scrollOverheadId);
+        }
 
-                }
-            });
-        scrollId = savedInstanceState.getInt("SCROLLID");
-        scrollOverheadId = savedInstanceState.getInt("SCROLLOVERHEADID");
         }
 
     private void updateUI() {
